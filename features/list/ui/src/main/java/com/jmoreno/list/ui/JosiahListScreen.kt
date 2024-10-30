@@ -13,8 +13,12 @@ import com.jmoreno.list.ui.ListViewModel
 fun JosiahListScreen(modifier: Modifier = Modifier, viewModel: ListViewModel = koinViewModel()) {
     val state = viewModel.viewState.collectAsState()
     LazyColumn(modifier = modifier) {
-        items(state.value.data){ item ->
-            Text(text = item)
+        items(state.value.data){ data ->
+            Text(text = data.groupTitle)
+            data.items.forEach { item ->
+                Text(text = item.listId)
+                Text(text = item.name)
+            }
         }
     }
 }
