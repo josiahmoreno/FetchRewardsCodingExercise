@@ -40,6 +40,11 @@ android {
 }
 
 dependencies {
+    //  Retrofit
+    //
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.gson)
+
     //  Koin
     //
     implementation(libs.koin.core)
@@ -49,7 +54,6 @@ dependencies {
     testImplementation(libs.koin.compose)
     testImplementation(libs.koin.test.junit)
     testImplementation(libs.koin.test)
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

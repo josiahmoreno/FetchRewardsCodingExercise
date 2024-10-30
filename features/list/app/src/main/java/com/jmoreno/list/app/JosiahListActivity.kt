@@ -6,13 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.jmoreno.list.app.ui.theme.FetchtestTheme
-import com.jmoreno.list.ui.JosiahListScreen
+import com.jmoreno.list.ui.components.FetchListScreen
 
 class JosiahListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +20,8 @@ class JosiahListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FetchtestTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    JosiahListScreen(
+                Scaffold(modifier = Modifier.fillMaxSize(), containerColor = MaterialTheme.colorScheme.background) { innerPadding ->
+                    FetchListScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -35,6 +35,6 @@ class JosiahListActivity : ComponentActivity() {
 @Composable
 fun JosiahListScreenPreview() {
     FetchtestTheme {
-        JosiahListScreen()
+        FetchListScreen()
     }
 }

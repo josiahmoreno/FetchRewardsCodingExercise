@@ -33,6 +33,11 @@ android {
 }
 
 dependencies {
+    //  Retrofit
+    //
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.gson)
+
     //  Coroutines
     //
     implementation(libs.kotlinx.coroutines.core)

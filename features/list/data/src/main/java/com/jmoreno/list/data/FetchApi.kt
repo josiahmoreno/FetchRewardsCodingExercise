@@ -1,20 +1,39 @@
 package com.jmoreno.list.data
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import retrofit2.Response
+import retrofit2.http.GET
 
-class FetchApi {
-    fun fetchJson(): Flow<List<FetchRewardsDto>> {
-        return flow {
-            emit(
-                listOf(
-                    FetchRewardsDto(id = 755, listId =  2, name=  ""),
-                    FetchRewardsDto(id = 203, listId =  2, name=  ""),
-                    FetchRewardsDto(id = 684, listId =  1, name=  "Item 684"),
-                    FetchRewardsDto(id = 276, listId =  1, name=  "Item 276"),
-                )
-            )
+
+class FetchApi(private val fetchService: FetchService, private val dispatcher: CoroutineDispatcher ) : IFetchApi {
+    override suspend fun fetchJson(): Result<List<FetchNetworkItem>> {
+        return withContext(dispatcher) {
+            fetchService.listRepos().runCatching {
+
+            }
+            val response = fetchService.listRepos()
+            if (response.isSuccessful) {
+                 Result.success(response.body()!!)
+            } else {
+                val failure = HttpException(response)
+                Result.failure(failure)
+            }
         }
     }
-
 }
+
+interface FetchService {
+    @GET("/hiring.json")
+    suspend fun listRepos(): Response<List<FetchNetworkItem>>
+}
+
+
+data class FetchNetworkItem(
+    val id: Int,
+    val listId: Int,
+    val name: String?,
+)
