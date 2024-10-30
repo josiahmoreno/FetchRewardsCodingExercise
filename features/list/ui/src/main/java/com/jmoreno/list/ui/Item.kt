@@ -1,6 +1,6 @@
 package com.jmoreno.list.ui
 
 data class Item(
-    val listId: String,
+    val id: String,
     val name: String
 )

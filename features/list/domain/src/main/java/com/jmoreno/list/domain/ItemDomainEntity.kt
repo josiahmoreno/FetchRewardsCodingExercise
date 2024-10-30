@@ -1,6 +1,3 @@
 package com.jmoreno.list.domain
 
-class ItemDomainEntity {
-
-
-}
+data class ItemDomainEntity(val id : Int,val name: String)

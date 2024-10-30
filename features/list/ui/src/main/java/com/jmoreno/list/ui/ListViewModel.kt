@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class ListViewModel(private val fetchListUseCase: FetchListUseCase): ViewModel() {
+class ListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewModel() {
     val viewState: MutableStateFlow<ListViewState> = MutableStateFlow(ListViewState())
 
     init {
@@ -25,11 +25,14 @@ class ListViewModel(private val fetchListUseCase: FetchListUseCase): ViewModel()
     }
 }
 
-private fun ItemDomainEntity.mapToUiModel(): List<Item> {
-   TODO()
+private fun List<ItemDomainEntity>.mapToUiModel(): List<Item> {
+    return map {
+        Item(id = it.id.toString(), name = it.name)
+    }
 }
-private fun List<FetchRewardsDomainModel>.toUIModel() : List<JosiahListItem> {
-    return map{
-        JosiahListItem(it.groupTitle, it.data.mapToUiModel())
+
+private fun List<FetchRewardsDomainModel>.toUIModel(): List<FetchRewardsItemUI> {
+    return map {
+        FetchRewardsItemUI(it.groupId.toString(), it.data.mapToUiModel())
     }
 }
