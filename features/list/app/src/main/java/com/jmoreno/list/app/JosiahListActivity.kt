@@ -22,7 +22,6 @@ class JosiahListActivity : ComponentActivity() {
             FetchtestTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     JosiahListScreen(
-                        name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -36,6 +35,6 @@ class JosiahListActivity : ComponentActivity() {
 @Composable
 fun JosiahListScreenPreview() {
     FetchtestTheme {
-        JosiahListScreen("Android")
+        JosiahListScreen()
     }
 }

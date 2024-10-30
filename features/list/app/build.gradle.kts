@@ -40,9 +40,17 @@ android {
 }
 
 dependencies {
+    //  Koin
+    //
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    testImplementation(libs.koin.core)
+    testImplementation(libs.koin.compose)
+    testImplementation(libs.koin.test.junit)
+    testImplementation(libs.koin.test)
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -52,6 +60,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(project(":features:list:ui"))
+    implementation(project(":features:list:domain"))
+    implementation(project(":features:list:data"))
+    testImplementation(project(":features:list:ui"))
+    testImplementation(project(":features:list:domain"))
+    testImplementation(project(":features:list:data"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -12,6 +12,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 koin = "4.0.0"
 runtimeAndroid = "1.7.4"
+kotlinx = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,7 +35,14 @@ material = { group = "com.google.android.material", name = "material", version.r
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"}
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin"}
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"}
+koin-test-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin"}
+
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+# Coroutines)
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx"}
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
