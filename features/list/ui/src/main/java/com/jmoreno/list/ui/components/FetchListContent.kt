@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jmoreno.list.ui.FetchListViewModel
+import com.jmoreno.list.ui.models.FetchRewardsGroupUI
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -33,72 +34,6 @@ fun FetchListContent(
 ) {
     val state = viewModel.viewState.collectAsState()
 
-    val pullRefreshState = rememberPullToRefreshState()
-    PullToRefreshBox(
-        state = pullRefreshState,
-        isRefreshing = state.value.isLoading,
-        onRefresh = {
-            viewModel.refresh()
-        },
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullRefreshState,
-                isRefreshing = state.value.isLoading,
-                modifier = Modifier.align(Alignment.TopCenter),
-            )
-        }
-    ) {
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            state.value.data.forEach { group ->
-                stickyHeader(key = group.groupId) {
-                    Box(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.tertiaryContainer)
-                            .fillParentMaxWidth()
-                    ) {
-                        Text(
-                            "Group ${group.groupId}",
-                            modifier = Modifier.padding(
-                                top = 16.dp,
-                                start = 16.dp,
-                                end = 16.dp,
-                                bottom = 8.dp
-                            ),
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.onTertiaryContainer
-                        )
-                    }
 
-                }
-                items(group.items, key = { it.id }) { item ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                top = 4.dp,
-                                bottom = 4.dp,
-                                start = 4.dp
-                            ),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        ),
-                        elevation = CardDefaults.elevatedCardElevation()
-                    ) {
-                        Box(
-                            modifier = Modifier.padding(
-                                top = 16.dp,
-                                bottom = 4.dp,
-                                start = 16.dp
-                            )
-                        ) {
-                            Text(text = "Name = ${item.name}, Id = ${item.id}")
-                        }
-                    }
-                }
-            }
-
-
-        }
-    }
 
 }
