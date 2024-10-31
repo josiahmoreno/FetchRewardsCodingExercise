@@ -12,11 +12,11 @@ Native Android App in Kotlin that retrieves and displays data from a sample api.
 - ViewModels
 - Jetpack Compose.
 - Retrofit2
-- Error handling for network exceptions and has fun features
-- Pull to Refresh and a Snackbar notification to retry fetching.
+- Error handling for network exceptions
+- Pull to Refresh and a Snackbar notification to retry fetching
 - Modules project structure
 - `data`, `domain`, `ui` layer seperation
-- Clean Archticture with UseCases and Repository pattern.
+- Clean Archticture with Use Cases and Repository pattern
 - Unit test to verify koin configuration
 
 # Demo
