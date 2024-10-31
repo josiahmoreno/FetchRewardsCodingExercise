@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.jmoreno.fetchtest"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.jmoreno.fetchtest"
@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":features:list"))
+    implementation(project(":features:list:app"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

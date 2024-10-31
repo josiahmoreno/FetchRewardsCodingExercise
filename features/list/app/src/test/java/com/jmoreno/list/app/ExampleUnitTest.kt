@@ -20,7 +20,7 @@ class ExampleUnitTest {
         assertEquals(4, 2 + 2)
     }
 
-    val niaAppModule = module {
+    private val testAppModule = module {
         includes(
             AppModule,
         )
@@ -32,6 +32,6 @@ class ExampleUnitTest {
     fun checkKoinModule() {
 
         // Verify Koin configuration
-        niaAppModule.verify()
+        testAppModule.verify()
     }
 }
