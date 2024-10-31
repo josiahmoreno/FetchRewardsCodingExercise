@@ -1,12 +1,12 @@
-## Description
+# Description
 Native Android App in Kotlin that retrieves and displays data from a sample api.
-## Requirements
+# Requirements
 -   Display all the items grouped by "listId"
 -   Sort the results first by "listId" then by "name" when displaying.
 -   Filter out any items where "name" is blank or null.
 - The final result should be displayed to the user in an easy-to-read list.
 
-## Features
+# Features
 - MVI
 - Dependency Integration via Koin
 - ViewModels
@@ -19,10 +19,17 @@ Native Android App in Kotlin that retrieves and displays data from a sample api.
 - Clean Archticture with UseCases and Repository pattern.
 - Unit test to verify koin configuration
 
-## Demo
+# Demo
+
+https://github.com/user-attachments/assets/c92e1726-d85b-484f-b4d8-58699c9836ee
 
 
-##  Future Improvements
+### Airplane Mode Test
+
+https://github.com/user-attachments/assets/2fe3faa9-398e-48c1-a4d8-ed2170ec2fe6
+
+
+#  Future Improvements
 - Add a LocalDataSource to the ListRepository for offline use.
   Perhaps Room or SQLite.
 - Look into a better way of connecting the `app` module to `:features:list:app` since it took some refactoring to get them working together.
@@ -33,7 +40,7 @@ Native Android App in Kotlin that retrieves and displays data from a sample api.
 - Utilize more Unit tests specifically for ViewModel or the UseCase. So far the only one is `ExampleUnitTest.checkKoinModule` which verifies Koin config
 
 
-## Notes throughout development
+# Notes throughout development
 Here are my stream of consciousness notes taken during development. Excuse their messiness!
 
 > I haven’t used a libs version toml so that was fun
