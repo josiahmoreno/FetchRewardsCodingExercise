@@ -60,13 +60,6 @@ fun FetchListScreen(
             isRefreshing = state.value.isLoading,
             onRefresh = {
                 viewModel.refresh()
-            },
-            indicator = {
-                PullToRefreshDefaults.Indicator(
-                    state = pullRefreshState,
-                    isRefreshing = state.value.isLoading,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
             }
         ) {
             LazyColumn(modifier = modifier.padding(innerPadding).fillMaxSize()) {
