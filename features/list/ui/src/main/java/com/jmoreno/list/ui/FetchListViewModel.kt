@@ -1,6 +1,5 @@
 package com.jmoreno.list.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jmoreno.list.domain.FetchListUseCase
