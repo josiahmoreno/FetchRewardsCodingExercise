@@ -10,10 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jmoreno.list.ui.FetchRewardsItemUI
+import com.jmoreno.list.ui.models.FetchRewardsGroupUI
 
 @Composable
-fun GroupCard(data: FetchRewardsItemUI){
+fun GroupCard(data: FetchRewardsGroupUI){
     Text(
         text = "Group: ${data.groupId}",
         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),

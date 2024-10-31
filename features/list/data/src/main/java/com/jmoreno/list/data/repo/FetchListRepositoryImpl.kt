@@ -1,6 +1,10 @@
-package com.jmoreno.list.data
+package com.jmoreno.list.data.repo
 
-class FetchListRepositoryImpl(private val remoteDataSource: FetchRemoteDataSource) : FetchListRepository {
+import com.jmoreno.list.data.FetchListRepository
+import com.jmoreno.list.data.models.FetchRewardsDto
+
+class FetchListRepositoryImpl(private val remoteDataSource: FetchRemoteDataSource) :
+    FetchListRepository {
     override suspend fun fetchListItems(): Result<List<FetchRewardsDto>> {
         val result = remoteDataSource.fetchListData()
         return result.map { list ->

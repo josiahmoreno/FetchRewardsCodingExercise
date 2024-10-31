@@ -1,7 +1,7 @@
-package com.jmoreno.list.data
+package com.jmoreno.list.data.api
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.jmoreno.list.data.IFetchApi
+import com.jmoreno.list.data.models.FetchNetworkItem
 
 class FetchSampleApi : IFetchApi {
     override suspend fun fetchJson(): Result<List<FetchNetworkItem>> {

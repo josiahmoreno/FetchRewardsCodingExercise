@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.jmoreno.list.app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.jmoreno.list.app"

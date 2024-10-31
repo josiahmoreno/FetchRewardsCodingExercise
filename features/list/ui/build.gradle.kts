@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
-    namespace = "com.jmoreno.list"
-    compileSdk = 34
+    namespace = "com.jmoreno.list.ui"
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24

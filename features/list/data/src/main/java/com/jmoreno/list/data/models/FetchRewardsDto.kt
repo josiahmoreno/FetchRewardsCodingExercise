@@ -1,4 +1,4 @@
-package com.jmoreno.list.data
+package com.jmoreno.list.data.models
 
 data class FetchRewardsDto(
     val id: Int,

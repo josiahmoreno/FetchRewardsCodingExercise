@@ -1,57 +1,52 @@
 package com.jmoreno.list.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jmoreno.list.domain.FetchListUseCase
-import com.jmoreno.list.domain.FetchRewardsDomainModel
-import com.jmoreno.list.domain.ItemDomainEntity
+import com.jmoreno.list.domain.GroupDomainModel
+import com.jmoreno.list.domain.ItemDomainModel
+import com.jmoreno.list.ui.models.FetchRewardsGroupUI
+import com.jmoreno.list.ui.models.FetchRewardsItemUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
 class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewModel() {
-    suspend fun refresh() {
-        refreshItems()
-    }
-
     val viewState: MutableStateFlow<FetchListViewState> = MutableStateFlow(FetchListViewState())
 
     init {
         //  Fetch initial data
         //
+        refreshItems()
+    }
+
+    private fun refreshItems() {
         viewModelScope.launch {
-            viewState.emit(viewState.value.copy(isLoading = true))
+            viewState.emit(viewState.value.copy(isLoading = true, isError = false))
             yield()
             fetchListUseCase().map { it.toUIModel() }.onSuccess {
-                viewState.emit(viewState.value.copy(isLoading = false, data = it))
+                viewState.emit(viewState.value.copy(isLoading = false, data = it,  isError = false))
             }.onFailure {
                 viewState.emit(viewState.value.copy(isLoading = false, isError = true))
             }
-        }
-
-    }
-
-    private suspend fun refreshItems(){
-        viewModelScope.launch {
-            viewState.emit(viewState.value.copy(isLoading = true))
             yield()
-            fetchListUseCase().map { it.toUIModel() }.onSuccess {
-                viewState.emit(viewState.value.copy(isLoading = false, data = it))
-            }.onFailure {
-                viewState.emit(viewState.value.copy(isLoading = false, isError = true))
-            }
         }
     }
-}
 
-private fun List<ItemDomainEntity>.mapToUiModel(): List<Item> {
-    return map {
-        Item(id = it.id, name = it.name)
+    fun refresh() {
+        refreshItems()
     }
 }
 
-private fun List<FetchRewardsDomainModel>.toUIModel(): List<FetchRewardsItemUI> {
+private fun List<ItemDomainModel>.mapToUiModel(): List<FetchRewardsItemUI> {
     return map {
-        FetchRewardsItemUI(it.groupId, it.data.mapToUiModel())
+        FetchRewardsItemUI(id = it.id, name = it.name)
+    }
+}
+
+private fun List<GroupDomainModel>.toUIModel(): List<FetchRewardsGroupUI> {
+    return map {
+        FetchRewardsGroupUI(it.groupId, it.data.mapToUiModel())
     }
 }
