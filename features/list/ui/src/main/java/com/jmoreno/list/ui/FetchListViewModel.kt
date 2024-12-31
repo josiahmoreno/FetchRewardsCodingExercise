@@ -13,7 +13,7 @@ import kotlinx.coroutines.yield
 
 class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewModel() {
     val viewState: MutableStateFlow<FetchListViewState> = MutableStateFlow(FetchListViewState())
-
+    private var filterNullsOrBlank: Boolean = true
     init {
         //  Fetch initial data
         //
@@ -24,13 +24,18 @@ class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewM
         viewModelScope.launch {
             viewState.emit(viewState.value.copy(isLoading = true, isError = false))
             yield()
-            fetchListUseCase().map { it.toUIModel() }.onSuccess {
+            fetchListUseCase(filterNullsOrBlank).map { it.toUIModel() }.onSuccess {
                 viewState.emit(viewState.value.copy(isLoading = false, data = it,  isError = false))
             }.onFailure {
                 viewState.emit(viewState.value.copy(isLoading = false, isError = true))
             }
             yield()
         }
+    }
+
+    fun toggle(){
+        filterNullsOrBlank = !filterNullsOrBlank
+        refreshItems()
     }
 
     fun refresh() {
