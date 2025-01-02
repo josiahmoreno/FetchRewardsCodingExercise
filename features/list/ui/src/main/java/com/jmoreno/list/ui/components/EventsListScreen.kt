@@ -22,16 +22,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jmoreno.list.ui.FetchListViewModel
-import com.jmoreno.list.ui.models.EventItemUI
+import com.jmoreno.list.ui.EventsListViewModel
 
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun FetchListScreen(
+fun EventsListScreen(
     modifier: Modifier = Modifier,
-    viewModel: FetchListViewModel = koinViewModel()
+    viewModel: EventsListViewModel = koinViewModel()
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val state = viewModel.viewState.collectAsState()
@@ -68,15 +67,12 @@ fun FetchListScreen(
 //                    stickyHeader(key = group.groupId) {
 //                        GroupHeader(group = group)
 //                    }
-                    items(state.value.data, key = { it.id }) { item ->
+                    items(state.value.data, key = {
+                        //println(it.id)
+                        it.id }) { item ->
                         ItemCard(item)
                     }
                 //}
-            }
-            Button(modifier = Modifier.padding(top = 32.dp),onClick = {
-                viewModel.toggle()
-            }){
-                Text("Toggle")
             }
         }
     }

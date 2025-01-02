@@ -7,7 +7,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
 import org.koin.test.verify.verify
 import org.koin.core.module.dsl.viewModelOf
-import com.jmoreno.list.ui.FetchListViewModel
+import com.jmoreno.list.ui.EventsListViewModel
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -24,7 +24,7 @@ class ExampleUnitTest {
         includes(
             AppModule,
         )
-        viewModelOf(::FetchListViewModel)
+        viewModelOf(::EventsListViewModel)
     }
 
     @OptIn(KoinExperimentalAPI::class)

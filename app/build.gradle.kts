@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.jmoreno.phunware"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -43,6 +43,9 @@ dependencies {
     implementation(project(":features:list"))
     implementation(project(":features:list:app"))
 
+    //  Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

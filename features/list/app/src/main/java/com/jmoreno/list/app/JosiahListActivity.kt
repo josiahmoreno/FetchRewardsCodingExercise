@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.jmoreno.list.app.ui.theme.FetchtestTheme
-import com.jmoreno.list.ui.components.FetchListScreen
+import com.jmoreno.list.ui.components.EventsListScreen
 
 class JosiahListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +16,7 @@ class JosiahListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FetchtestTheme {
-                FetchListScreen(
+                EventsListScreen(
                     modifier = Modifier
                 )
             }
@@ -29,6 +29,6 @@ class JosiahListActivity : ComponentActivity() {
 @Composable
 fun JosiahListScreenPreview() {
     FetchtestTheme {
-        FetchListScreen()
+        EventsListScreen()
     }
 }

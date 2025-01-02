@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name="com.jmoreno.list.app.JosiahFetchApplication"
+        android:name="com.jmoreno.list.app.JosiahPhunwareApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val UiModule = module {
     includes(DomainModule)
-    viewModelOf(::FetchListViewModel)
+    viewModelOf(::EventsListViewModel)
 }

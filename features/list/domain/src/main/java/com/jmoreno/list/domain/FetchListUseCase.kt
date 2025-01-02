@@ -52,10 +52,12 @@ class FetchListUseCase(private val fetchListRepository: FetchListRepository) {
 private fun EventsDto.mapToDomainModel() : EventsDomainModel{
     return EventsDomainModel(
         id = id,
+        imgSrc = image,
         date = date,
         title = title,
-        location = locationline1,
-        description = locationline2
+        locationline1 = locationline1,
+        locationline2 = locationline2,
+        description = description
     )
 }
 

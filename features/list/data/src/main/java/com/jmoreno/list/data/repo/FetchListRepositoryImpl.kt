@@ -2,7 +2,7 @@ package com.jmoreno.list.data.repo
 
 import com.jmoreno.list.data.FetchListRepository
 import com.jmoreno.list.data.models.EventsDto
-import com.jmoreno.list.data.models.FeedNetworkItem
+import com.jmoreno.list.data.models.EventsNetworkItem
 
 class FetchListRepositoryImpl(private val remoteDataSource: FetchRemoteDataSource) :
     FetchListRepository {
@@ -14,7 +14,7 @@ class FetchListRepositoryImpl(private val remoteDataSource: FetchRemoteDataSourc
     }
 }
 
-private fun FeedNetworkItem.mapToDto(): EventsDto {
+private fun EventsNetworkItem.mapToDto(): EventsDto {
     return EventsDto(
         id = id,
         description = description,

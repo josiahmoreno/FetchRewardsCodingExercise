@@ -1,6 +1,6 @@
 package com.jmoreno.list.app
 
-import com.jmoreno.list.data.FetchService
+import com.jmoreno.list.data.EventsService
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -31,8 +31,8 @@ fun provideRetrofit(
         .build()
 }
 
-fun provideService(retrofit: Retrofit): FetchService =
-    retrofit.create(FetchService::class.java)
+fun provideService(retrofit: Retrofit): EventsService =
+    retrofit.create(EventsService::class.java)
 
 
 val NetworkModule = module {

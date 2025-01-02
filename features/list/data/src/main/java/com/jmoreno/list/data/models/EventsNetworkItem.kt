@@ -1,6 +1,6 @@
 package com.jmoreno.list.data.models
 
-data class FeedNetworkItem(
+data class EventsNetworkItem(
     val id: Int,
     val description: String,
     val title: String,
