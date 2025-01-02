@@ -1,4 +1,4 @@
-package com.jmoreno.fetchtest
+package com.jmoreno.phunware
 
 import org.junit.Test
 

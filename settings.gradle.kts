@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "fetchtest"
+rootProject.name = "phunware"
 include(":app")
 include(":features")
 include(":features:list")

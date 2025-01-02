@@ -2,11 +2,10 @@ package com.jmoreno.list.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jmoreno.list.domain.EventsDomainModel
 import com.jmoreno.list.domain.FetchListUseCase
-import com.jmoreno.list.domain.GroupDomainModel
-import com.jmoreno.list.domain.ItemDomainModel
-import com.jmoreno.list.ui.models.FetchRewardsGroupUI
-import com.jmoreno.list.ui.models.FetchRewardsItemUI
+import com.jmoreno.list.ui.models.DateFormatted
+import com.jmoreno.list.ui.models.EventItemUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
@@ -14,6 +13,7 @@ import kotlinx.coroutines.yield
 class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewModel() {
     val viewState: MutableStateFlow<FetchListViewState> = MutableStateFlow(FetchListViewState())
     private var filterNullsOrBlank: Boolean = true
+
     init {
         //  Fetch initial data
         //
@@ -25,7 +25,7 @@ class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewM
             viewState.emit(viewState.value.copy(isLoading = true, isError = false))
             yield()
             fetchListUseCase(filterNullsOrBlank).map { it.toUIModel() }.onSuccess {
-                viewState.emit(viewState.value.copy(isLoading = false, data = it,  isError = false))
+                viewState.emit(viewState.value.copy(isLoading = false, data = it, isError = false))
             }.onFailure {
                 viewState.emit(viewState.value.copy(isLoading = false, isError = true))
             }
@@ -33,7 +33,7 @@ class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewM
         }
     }
 
-    fun toggle(){
+    fun toggle() {
         filterNullsOrBlank = !filterNullsOrBlank
         refreshItems()
     }
@@ -43,14 +43,20 @@ class FetchListViewModel(private val fetchListUseCase: FetchListUseCase) : ViewM
     }
 }
 
-private fun List<ItemDomainModel>.mapToUiModel(): List<FetchRewardsItemUI> {
+
+private fun List<EventsDomainModel>.toUIModel(): List<EventItemUI> {
     return map {
-        FetchRewardsItemUI(id = it.id, name = it.name)
+        EventItemUI(
+            id = it.id,
+            dateFormatted = formatDate(it.date),
+            title = it.title,
+            locationLine1 = it.location,
+            locationLine2 = it.location,
+            description = it.description
+        )
     }
 }
 
-private fun List<GroupDomainModel>.toUIModel(): List<FetchRewardsGroupUI> {
-    return map {
-        FetchRewardsGroupUI(it.groupId, it.data.mapToUiModel())
-    }
+fun formatDate(date: String): DateFormatted {
+    return 
 }

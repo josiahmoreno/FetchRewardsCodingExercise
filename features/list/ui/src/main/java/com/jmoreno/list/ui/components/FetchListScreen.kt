@@ -23,7 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jmoreno.list.ui.FetchListViewModel
-import com.jmoreno.list.ui.models.FetchRewardsGroupUI
+import com.jmoreno.list.ui.models.EventItemUI
+
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -63,14 +64,14 @@ fun FetchListScreen(
             }
         ) {
             LazyColumn(modifier = modifier.padding(innerPadding).fillMaxSize()) {
-                state.value.data.forEach { group: FetchRewardsGroupUI ->
-                    stickyHeader(key = group.groupId) {
-                        GroupHeader(group = group)
-                    }
-                    items(group.items, key = { it.id }) { item ->
+                //state.value.data.forEach { group: EventItemUI ->
+//                    stickyHeader(key = group.groupId) {
+//                        GroupHeader(group = group)
+//                    }
+                    items(state.value.data, key = { it.id }) { item ->
                         ItemCard(item)
                     }
-                }
+                //}
             }
             Button(modifier = Modifier.padding(top = 32.dp),onClick = {
                 viewModel.toggle()

@@ -4,6 +4,7 @@ import com.jmoreno.list.data.api.FetchApi
 import com.jmoreno.list.data.repo.FetchRemoteDataSource
 import com.jmoreno.list.data.IFetchApi
 import com.jmoreno.list.data.FetchListRepository
+import com.jmoreno.list.data.api.FetchSampleApi
 import com.jmoreno.list.data.repo.FetchListRepositoryImpl
 import com.jmoreno.list.ui.UiModule
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +18,6 @@ val AppModule = module {
     includes(NetworkModule)
     singleOf(::FetchRemoteDataSource) { bind<FetchRemoteDataSource>() }
     singleOf(::FetchListRepositoryImpl) { bind<FetchListRepository>() }
-    singleOf(::FetchApi) { bind<IFetchApi>() }
+    singleOf(::FetchSampleApi) { bind<IFetchApi>() }
     single<CoroutineDispatcher> { Dispatchers.IO }
 }

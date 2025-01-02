@@ -1,4 +1,4 @@
-package com.jmoreno.fetchtest.ui.theme
+package com.jmoreno.phunware.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.jmoreno.fetchtest"
+    namespace = "com.jmoreno.phunware"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.jmoreno.fetchtest"
+        applicationId = "com.jmoreno.phunware"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
