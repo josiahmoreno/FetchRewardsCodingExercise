@@ -17,12 +17,14 @@ kotlinx = "1.8.0"
 retrofit = "2.11.0"
 gson = "2.11.0"
 material3 = "1.4.0-alpha03"
-adaptiveNavigationAndroid = "1.0.0"
+adaptiveNavigationAndroid = "1.1.0-alpha08"
 
 [libraries]
-androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
-androidx-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
-androidx-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
+androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive",version.ref = "adaptiveNavigationAndroid" }
+androidx-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout",version.ref = "adaptiveNavigationAndroid" }
+androidx-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation",version.ref = "adaptiveNavigationAndroid" }
+androidx-adaptive-navigation-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation-android", version.ref = "adaptiveNavigationAndroid" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
@@ -55,7 +57,6 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 # Retrofit
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
 retrofit2-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gson"}
-androidx-adaptive-navigation-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation-android", version.ref = "adaptiveNavigationAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

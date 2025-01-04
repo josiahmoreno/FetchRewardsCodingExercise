@@ -1,15 +1,21 @@
 package com.jmoreno.list.ui.components
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -19,44 +25,33 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.jmoreno.list.ui.EventsListViewModel
-import com.jmoreno.list.ui.R
-import com.jmoreno.list.ui.models.EventItemUI
-import org.koin.androidx.compose.koinViewModel
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.runtime.State
-import androidx.compose.ui.Alignment
 import com.jmoreno.list.ui.FetchListViewState
+import com.jmoreno.list.ui.models.EventItemUI
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
@@ -66,33 +61,40 @@ fun EventsListScreen(
     appName: String,
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<EventItemUI>()
-
+    val coroutineScope = rememberCoroutineScope()
     BackHandler(navigator.canNavigateBack()) {
-        navigator.navigateBack()
-    }
+        coroutineScope.launch {
+            navigator.navigateBack()
+        }
 
+    }
+    var detailed by remember{ mutableStateOf<EventItemUI?>(null) }
     val state: State<FetchListViewState> = viewModel.viewState.collectAsState()
     val navigationHandler: (NavigationAction) -> Unit = { action ->
         when (action) {
             is NavigationAction.OnFixtureClick -> {
-                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, action.eventItemUI)
+                coroutineScope.launch {
+                    detailed = action.eventItemUI
+                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, action.eventItemUI)
+                }
             }
             // other navigation events
         }
     }
     ListDetailPaneScaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red)
-            //.padding(paddingValues = it)
-        ,
+            .fillMaxSize(),
+        //.background(Color.Red)
+        //.padding(paddingValues = it)
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
             AnimatedPane(
-                modifier = Modifier.fillMaxSize()
-
+                modifier = Modifier.fillMaxSize(),
+//                enterTransition = slideInHorizontally (initialOffsetX = {-it}),
+//                exitTransition = slideOutHorizontally (targetOffsetX = {-it})
             ) {
+                println("josiah listPane ListScreen ${navigator.currentDestination!!.contentKey?.title}}")
                 ListScreen(state = state, viewModel, appName = appName, onItemClick = {
                     navigationHandler(NavigationAction.OnFixtureClick(it))
                 })
@@ -100,15 +102,19 @@ fun EventsListScreen(
         },
         detailPane = {
             AnimatedPane(
-                modifier = Modifier.fillMaxSize()
-
-            ){
-                navigator.currentDestination?.content?.let {
-                    //MatchDetailScreen(it)
-                    //EnterAnimation {
-                        EventsDetailScreen(it)
-                  //  }
-                }
+                modifier = Modifier.fillMaxSize(),
+//                        enterTransition = slideInHorizontally (initialOffsetX = {-it}),
+                exitTransition = slideOutHorizontally (
+                 //   targetOffsetX = {-it}
+                )
+            ) {
+                //  navigator.currentDestination?.contentKey?.let {
+                //MatchDetailScreen(it)
+                //EnterAnimation {
+                //println("josiah detailPane ${navigator.currentDestination!!.contentKey?.title}")
+                EventsDetailScreen(detailed!!)
+                //  }
+                //}
             }
         },
     )
@@ -128,6 +134,7 @@ fun EnterAnimation(content: @Composable () -> Unit) {
         content()
     }
 }
+
 sealed interface UserAction
 
 sealed interface NavigationAction : UserAction {
@@ -144,7 +151,12 @@ sealed interface MatchDetailAction : UserAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreen(state: State<FetchListViewState> , viewModel: EventsListViewModel, appName: String, onItemClick: (EventItemUI) -> Unit){
+fun ListScreen(
+    state: State<FetchListViewState>,
+    viewModel: EventsListViewModel,
+    appName: String,
+    onItemClick: (EventItemUI) -> Unit
+) {
     val snackBarHostState = remember { SnackbarHostState() }
 //    val scrollBehavior =
 //        TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -164,7 +176,9 @@ fun ListScreen(state: State<FetchListViewState> , viewModel: EventsListViewModel
         }
     }
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Cyan)
         //.nestedScroll(scrollBehavior.nestedScrollConnection)
         ,
         containerColor = MaterialTheme.colorScheme.background,
@@ -195,10 +209,16 @@ fun ListScreen(state: State<FetchListViewState> , viewModel: EventsListViewModel
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 modifier = Modifier
                     .padding(innerPadding)
+
                     .background(Color.White)
-                    .fillMaxSize()
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = 24.dp,
+                    bottom = 24.dp,
+                )
 
             ) {
+
                 //state.value.data.forEach { group: EventItemUI ->
 //                    stickyHeader(key = group.groupId) {
 //                        GroupHeader(group = group)
