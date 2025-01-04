@@ -7,6 +7,15 @@ class EventsSampleApi : IEventsApi {
     override suspend fun fetchJson(): Result<List<EventsNetworkItem>> {
         return Result.success(
                 listOf(
+                    EventsNetworkItem(id = 9, description =  "Meet with Lando Calrissian for capture of Han Solo and Leia.",
+                        title=  "Pay the Bounty Hunter",
+                        timestamp = "2015-06-26T04:09:30.337Z",
+                        image = null,
+                        phone = "1 (800) 786-2430",
+                        date = "2015-05-04T04:30:00.000Z",
+                        locationline1 = "Cloud City, Bespin",
+                        locationline2 = ""
+                    ),
                     EventsNetworkItem(id = 1, description =  "Rebel Forces spotted on Hoth. Quell their rebellion for the Empire.", title =  "Stop Rebel Forces",
                         timestamp = "2015-06-18T17:02:02.614Z", image = "https://raw.githubusercontent.com/phunware-services/dev-interview-homework/master/Images/Battle_of_Hoth.jpg",
                         date = "2015-06-18T23:30:00.000Z",
@@ -25,6 +34,7 @@ class EventsSampleApi : IEventsApi {
                         locationline1 = "Naboo",
                         locationline2 = "Naboo System"
                         ),
+
                 )
             )
     }

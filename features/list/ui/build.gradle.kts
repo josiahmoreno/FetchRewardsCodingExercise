@@ -48,6 +48,13 @@ dependencies {
     //  Coil
     implementation(libs.coil.compose)
 
+    //  Adaptive
+    implementation(libs.androidx.adaptive)
+    implementation(libs.androidx.adaptive.layout)
+    implementation(libs.androidx.adaptive.navigation)
+    implementation(libs.androidx.adaptive.navigation.android)
+
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -58,6 +65,7 @@ dependencies {
     implementation(libs.androidx.runtime.android)
     implementation(platform(libs.androidx.compose.bom))
     implementation(project(":features:list:domain"))
+
     testImplementation(libs.junit)
     testImplementation(libs.koin.core)
     testImplementation(libs.koin.android)
