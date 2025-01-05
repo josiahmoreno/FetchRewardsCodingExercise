@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,19 +81,22 @@ fun EventsListScreen(
             // other navigation events
         }
     }
+    val scrollState: LazyListState = rememberSaveable(saver = LazyListState.Saver) {
+        LazyListState()
+    }
     ListDetailPaneScaffold(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize().background(MaterialTheme.colorScheme.background),
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
             AnimatedPane(
                 modifier = Modifier.fillMaxSize(),
-//                enterTransition = slideInHorizontally (initialOffsetX = {-it}),
-//                exitTransition = slideOutHorizontally (targetOffsetX = {-it})
+               // enterTransition = slideInHorizontally (),
+              // exitTransition = slideOutHorizontally ()
             ) {
                 println("josiah listPane ListScreen ${navigator.currentDestination!!.contentKey?.title}}")
-                ListScreen(state = state, viewModel, appName = appName, onItemClick = {
+                ListScreen(state = state, viewModel =  viewModel,scrollState = scrollState, appName = appName, onItemClick = {
                     navigationHandler(NavigationAction.OnFixtureClick(it))
                 })
             }
@@ -98,8 +104,8 @@ fun EventsListScreen(
         detailPane = {
             AnimatedPane(
                 modifier = Modifier.fillMaxSize(),
-//                        enterTransition = slideInHorizontally (initialOffsetX = {-it}),
-                exitTransition = slideOutHorizontally ()
+             //          enterTransition = slideInHorizontally (),
+          //      exitTransition = slideOutHorizontally ()
             ) {
                 state.value.detail?.let {
                     EventsDetailScreen(it,
@@ -125,10 +131,12 @@ sealed interface NavigationAction : UserAction {
 @Composable
 fun ListScreen(
     state: State<FetchListViewState>,
+    scrollState: LazyListState,
     viewModel: EventsListViewModel,
     appName: String,
     onItemClick: (EventItemUI) -> Unit
 ) {
+
     val snackBarHostState = remember { SnackbarHostState() }
     LaunchedEffect(state.value.isError) {
         if (state.value.isError) {
@@ -165,6 +173,7 @@ fun ListScreen(
     ) { innerPadding ->
         val pullRefreshState = rememberPullToRefreshState()
         PullToRefreshBox(
+            modifier = Modifier.padding(innerPadding),
             state = pullRefreshState,
             isRefreshing = state.value.isLoading,
             onRefresh = {
@@ -172,11 +181,12 @@ fun ListScreen(
             }
         ) {
             LazyColumn(
+                state = scrollState,
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 modifier = Modifier
                     .padding(innerPadding)
 
-                    .background(Color.White)
+                   // .background(Color.White)
                     .fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = 24.dp,

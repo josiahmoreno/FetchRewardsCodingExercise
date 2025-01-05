@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil3.compose.AsyncImage
@@ -44,7 +46,7 @@ import coil3.request.crossfade
 import com.jmoreno.list.ui.models.EventItemUI
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit) {
     val scrollBehavior =
@@ -52,7 +54,6 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
     val context = LocalContext.current
     var permissionGranted by remember { mutableStateOf(false) }
 
-    // Permission request launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -75,8 +76,6 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
 
     }
 
-
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +83,6 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             Box(modifier = Modifier) {
-                // Background image using Coil
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(eventItemUI.imgSrc) // Replace with your image URL
@@ -96,14 +94,11 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                 )
                 LargeTopAppBar(
                     modifier = Modifier,
-                    title = {
-
-                    },
+                    title = {},
                     expandedHeight = 300.dp,
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
-                        //containerColor = MaterialTheme.colorScheme.primary,
                         containerColor = Color.Transparent,
-                        scrolledContainerColor = MaterialTheme.colorScheme.primary,
+                        scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.onBackground,
                     ),
                     scrollBehavior = scrollBehavior,
@@ -119,7 +114,7 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                         }
                     },
                     actions = {
-                        if(eventItemUI.phone!=null) {
+                        if (eventItemUI.phone != null) {
                             IconButton(onClick = {
                                 if (permissionGranted) {
                                     // Make the call
@@ -140,8 +135,32 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                             }
                         }
 
-                        IconButton(onClick = { /* Handle share
-                         action */ }) {
+                        IconButton(onClick = {
+                            val smsIntent = Intent(Intent.ACTION_SENDTO).apply {
+                                data = Uri.parse("smsto:")
+                                putExtra(
+                                    "sms_body", "Check out this event! ${eventItemUI.title}\n" +
+                                            eventItemUI.dateOfEventFormatted.date
+                                ) // Add the message body
+                            }
+                            val emailIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "message/rfc822"
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    "Check out this event! ${eventItemUI.title}"
+                                ) // Subject
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "${eventItemUI.title}\n\n${eventItemUI.dateOfEventFormatted.date}"
+                                ) // Body
+                            }
+                            val chooserIntent =
+                                Intent.createChooser(emailIntent, "Share via").apply {
+                                    putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(smsIntent))
+                                }
+                            context.startActivity(chooserIntent)
+
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.Share,
                                 contentDescription = "Share",
@@ -152,19 +171,44 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .padding(
-                start = 16.dp,
-                top = 0.dp,
-                end = 16.dp
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(
+                    start = 16.dp,
+                    top = 0.dp,
+                    end = 16.dp
+                )
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = eventItemUI.dateOfEventFormatted.date,
+                modifier = Modifier.padding(top = 24.dp),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
             )
-            .verticalScroll(rememberScrollState())) {
-            Text(eventItemUI.dateOfEventFormatted.date, Modifier.padding(top = 16.dp))
-            Text(eventItemUI.title, Modifier.padding(top = 16.dp))
-            Text(eventItemUI.locationLine1, Modifier.padding(top = 16.dp))
-            Text(eventItemUI.locationLine2)
-            Text(eventItemUI.description, Modifier.padding(top = 16.dp))
+            Text(
+                text = eventItemUI.title,
+                modifier = Modifier.padding(top = 16.dp),
+                style = MaterialTheme.typography.headlineMediumEmphasized,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = eventItemUI.locationLine1,
+                modifier = Modifier.padding(top = 18.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = eventItemUI.locationLine2,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+
+            )
+            Text(
+                text = eventItemUI.description,
+                modifier = Modifier.padding(top = 16.dp)
+            )
         }
 
 
