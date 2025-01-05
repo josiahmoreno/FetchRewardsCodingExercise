@@ -6,7 +6,6 @@ data class EventsDto(
     val title: String,
     val timestamp: String,
     val image: String?,
-    val date: String,
     val phone: String?,
     val locationline1: String,
     val locationline2: String

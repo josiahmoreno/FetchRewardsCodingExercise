@@ -53,8 +53,9 @@ private fun EventsDto.mapToDomainModel() : EventsDomainModel{
     return EventsDomainModel(
         id = id,
         imgSrc = image,
-        date = date,
+        timeStamp = timestamp,
         title = title,
+        phone =  phone,
         locationline1 = locationline1,
         locationline2 = locationline2,
         description = description

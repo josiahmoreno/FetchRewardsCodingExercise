@@ -5,7 +5,8 @@ import com.jmoreno.list.ui.models.EventItemUI
 data class FetchListViewState(
     val isLoading: Boolean = true,
     val isError: Boolean = false,
-    val data: List<EventItemUI> = listOf()
+    val data: List<EventItemUI> = listOf(),
+    val detail: EventItemUI? = null
 )
 /*
 sealed class FetchListViewState {

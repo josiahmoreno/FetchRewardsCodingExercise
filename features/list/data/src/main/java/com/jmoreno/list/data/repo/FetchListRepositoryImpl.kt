@@ -21,7 +21,6 @@ private fun EventsNetworkItem.mapToDto(): EventsDto {
         title = title,
         timestamp = timestamp,
         image = image,
-        date = date,
         phone = phone,
         locationline1 = locationline1,
         locationline2 = locationline2

@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -20,15 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import coil3.size.Scale
-import coil3.size.Size
 import com.jmoreno.list.ui.models.EventItemUI
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -86,7 +77,7 @@ fun ItemCard(item: EventItemUI, onItemClick: (EventItemUI) -> Unit) {
                 } else {
                     headline
                 }
-                Text(text = item.dateFormatted.date)
+                Text(text = item.dateOfEventFormatted.date)
                 Text(
                     text = truncatedHeadline,
                     modifier = Modifier.padding(top = 16.dp),

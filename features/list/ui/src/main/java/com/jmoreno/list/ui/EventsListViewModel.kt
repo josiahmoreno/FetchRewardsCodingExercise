@@ -44,6 +44,13 @@ class EventsListViewModel(private val fetchListUseCase: FetchListUseCase) : View
     fun refresh() {
         refreshItems()
     }
+
+    fun onEventCLicked(eventItemUI: EventItemUI) {
+        viewModelScope.launch {
+           viewState.emit(viewState.value.copy(detail = eventItemUI))
+        }
+
+    }
 }
 
 
@@ -52,7 +59,8 @@ private fun List<EventsDomainModel>.toUIModel(): List<EventItemUI> {
         EventItemUI(
             id = it.id,
             imgSrc = it.imgSrc,
-            dateFormatted = formatDate(it.date),
+            phone = it.phone,
+            dateOfEventFormatted = formatDate(it.timeStamp),
             title = it.title,
             locationLine1 = it.locationline1,
             locationLine2 = it.locationline2,

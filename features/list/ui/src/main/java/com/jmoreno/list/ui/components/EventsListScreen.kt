@@ -50,10 +50,7 @@ import com.jmoreno.list.ui.models.EventItemUI
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(
-    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3AdaptiveApi::class
-)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun EventsListScreen(
     modifier: Modifier = Modifier,
@@ -68,13 +65,13 @@ fun EventsListScreen(
         }
 
     }
-    var detailed by remember{ mutableStateOf<EventItemUI?>(null) }
+   // var detailed by remember{ mutableStateOf<EventItemUI?>(null) }
     val state: State<FetchListViewState> = viewModel.viewState.collectAsState()
     val navigationHandler: (NavigationAction) -> Unit = { action ->
         when (action) {
             is NavigationAction.OnFixtureClick -> {
                 coroutineScope.launch {
-                    detailed = action.eventItemUI
+                    viewModel.onEventCLicked(action.eventItemUI)
                     navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, action.eventItemUI)
                 }
             }
@@ -84,8 +81,6 @@ fun EventsListScreen(
     ListDetailPaneScaffold(
         modifier = Modifier
             .fillMaxSize(),
-        //.background(Color.Red)
-        //.padding(paddingValues = it)
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
@@ -104,35 +99,19 @@ fun EventsListScreen(
             AnimatedPane(
                 modifier = Modifier.fillMaxSize(),
 //                        enterTransition = slideInHorizontally (initialOffsetX = {-it}),
-                exitTransition = slideOutHorizontally (
-                 //   targetOffsetX = {-it}
-                )
+                exitTransition = slideOutHorizontally ()
             ) {
-                //  navigator.currentDestination?.contentKey?.let {
-                //MatchDetailScreen(it)
-                //EnterAnimation {
-                //println("josiah detailPane ${navigator.currentDestination!!.contentKey?.title}")
-                EventsDetailScreen(detailed!!)
-                //  }
-                //}
+                state.value.detail?.let {
+                    EventsDetailScreen(it,
+                        onBackArrowPressed = {
+                            coroutineScope.launch {
+                                navigator.navigateBack()
+                            }
+                        })
+                }
             }
         },
     )
-
-}
-
-@Composable
-fun EnterAnimation(content: @Composable () -> Unit) {
-    AnimatedVisibility(
-        visibleState = MutableTransitionState(
-            initialState = false
-        ).apply { targetState = true },
-        modifier = Modifier,
-        enter = slideInHorizontally(),
-        exit = slideOutHorizontally(),
-    ) {
-        content()
-    }
 }
 
 sealed interface UserAction
@@ -141,13 +120,6 @@ sealed interface NavigationAction : UserAction {
     data class OnFixtureClick(val eventItemUI: EventItemUI) : NavigationAction
     // other navigation actions could go here.
 }
-
-sealed interface FixturesAction : UserAction {
-    data class OnFixtureClick(val id: Int) : FixturesAction
-    // other fixtures specific actions here
-}
-
-sealed interface MatchDetailAction : UserAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,8 +130,6 @@ fun ListScreen(
     onItemClick: (EventItemUI) -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-//    val scrollBehavior =
-//        TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     LaunchedEffect(state.value.isError) {
         if (state.value.isError) {
             val result = snackBarHostState.showSnackbar(
@@ -178,9 +148,7 @@ fun ListScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Cyan)
-        //.nestedScroll(scrollBehavior.nestedScrollConnection)
-        ,
+            .background(Color.Cyan),
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
@@ -191,9 +159,7 @@ fun ListScreen(
                 ),
                 title = {
                     Text(appName)
-                },
-                //scrollBehavior = scrollBehavior,
-                //isCollapsed = false
+                }
             )
         }
     ) { innerPadding ->
@@ -218,18 +184,11 @@ fun ListScreen(
                 )
 
             ) {
-
-                //state.value.data.forEach { group: EventItemUI ->
-//                    stickyHeader(key = group.groupId) {
-//                        GroupHeader(group = group)
-//                    }
                 items(state.value.data, key = {
-                    //println(it.id)
                     it.id
                 }) { item ->
                     ItemCard(item, onItemClick = onItemClick)
                 }
-                //}
             }
         }
     }
