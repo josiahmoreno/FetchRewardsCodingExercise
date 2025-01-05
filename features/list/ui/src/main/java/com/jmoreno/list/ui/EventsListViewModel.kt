@@ -6,6 +6,7 @@ import com.jmoreno.list.domain.EventsDomainModel
 import com.jmoreno.list.domain.FetchListUseCase
 import com.jmoreno.list.ui.models.DateFormatted
 import com.jmoreno.list.ui.models.EventItemUI
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
@@ -25,7 +26,8 @@ class EventsListViewModel(private val fetchListUseCase: FetchListUseCase) : View
 
     private fun refreshItems() {
         viewModelScope.launch {
-            viewState.emit(viewState.value.copy(isLoading = true, isError = false))
+            viewState.emit(viewState.value.copy(isLoading = true, isError = false, data = listOf()))
+            //delay(2000)
             yield()
             fetchListUseCase(filterNullsOrBlank).map { it.toUIModel() }.onSuccess {
                 viewState.emit(viewState.value.copy(isLoading = false, data = it, isError = false))
@@ -34,11 +36,6 @@ class EventsListViewModel(private val fetchListUseCase: FetchListUseCase) : View
             }
             yield()
         }
-    }
-
-    fun toggle() {
-        filterNullsOrBlank = !filterNullsOrBlank
-        refreshItems()
     }
 
     fun refresh() {

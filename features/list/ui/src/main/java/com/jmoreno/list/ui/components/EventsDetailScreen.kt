@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -48,7 +49,10 @@ import com.jmoreno.list.ui.models.EventItemUI
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit) {
+fun EventsDetailScreen(eventItemUI: EventItemUI,
+                       onBackArrowPressed: () -> Unit,
+                       placeHolder: Painter
+) {
     val scrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
@@ -59,7 +63,6 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
     ) { isGranted: Boolean ->
         permissionGranted = isGranted
         if (isGranted) {
-            // If permission is granted, proceed with the call
             val callIntent = Intent(Intent.ACTION_CALL).apply {
                 data = Uri.parse("tel:${eventItemUI.phone}")
             }
@@ -68,12 +71,10 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
     }
 
     LaunchedEffect(Unit) {
-        // Check if permission is already granted
         permissionGranted = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.CALL_PHONE
         ) == PackageManager.PERMISSION_GRANTED
-
     }
 
     Scaffold(
@@ -85,9 +86,12 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
             Box(modifier = Modifier) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(eventItemUI.imgSrc) // Replace with your image URL
+                        .data(eventItemUI.imgSrc)
                         .crossfade(true)
                         .build(),
+                    fallback = placeHolder,
+                    placeholder = placeHolder,
+                    error = placeHolder,
                     contentDescription = "Background Image",
                     modifier = Modifier.matchParentSize(),
                     contentScale = ContentScale.Crop
@@ -103,7 +107,7 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                     ),
                     scrollBehavior = scrollBehavior,
                     navigationIcon = {
-                        IconButton(onClick = { /* Handle back action */
+                        IconButton(onClick = {
                             onBackArrowPressed()
                         }) {
                             Icon(
@@ -117,13 +121,11 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                         if (eventItemUI.phone != null) {
                             IconButton(onClick = {
                                 if (permissionGranted) {
-                                    // Make the call
                                     val callIntent = Intent(Intent.ACTION_CALL).apply {
                                         data = Uri.parse("tel:${eventItemUI.phone}")
                                     }
                                     context.startActivity(callIntent)
                                 } else {
-                                    // Request permission
                                     permissionLauncher.launch(Manifest.permission.CALL_PHONE)
                                 }
                             }) {
@@ -141,18 +143,18 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                                 putExtra(
                                     "sms_body", "Check out this event! ${eventItemUI.title}\n" +
                                             eventItemUI.dateOfEventFormatted.date
-                                ) // Add the message body
+                                )
                             }
                             val emailIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "message/rfc822"
                                 putExtra(
                                     Intent.EXTRA_SUBJECT,
                                     "Check out this event! ${eventItemUI.title}"
-                                ) // Subject
+                                )
                                 putExtra(
                                     Intent.EXTRA_TEXT,
                                     "${eventItemUI.title}\n\n${eventItemUI.dateOfEventFormatted.date}"
-                                ) // Body
+                                )
                             }
                             val chooserIntent =
                                 Intent.createChooser(emailIntent, "Share via").apply {
@@ -179,6 +181,7 @@ fun EventsDetailScreen(eventItemUI: EventItemUI, onBackArrowPressed: () -> Unit)
                     top = 0.dp,
                     end = 16.dp
                 )
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
             Text(

@@ -17,6 +17,7 @@ import androidx.core.view.WindowCompat
 import com.jmoreno.list.app.ui.theme.FetchtestTheme
 import com.jmoreno.list.ui.components.EventsListScreen
 import androidx.activity.compose.BackHandler
+import androidx.compose.ui.res.painterResource
 import com.jmoreno.list.ui.models.EventItemUI
 
 class JosiahListActivity : ComponentActivity() {
@@ -32,7 +33,8 @@ class JosiahListActivity : ComponentActivity() {
             FetchtestTheme {
                 EventsListScreen(
                     modifier = Modifier,
-                    appName = stringResource(R.string.app_name)
+                    appName = stringResource(R.string.app_name,),
+                    placeHolder = painterResource(R.drawable.placeholder_nomoon)
                 )
             }
         }
@@ -44,6 +46,6 @@ class JosiahListActivity : ComponentActivity() {
 @Composable
 fun JosiahListScreenPreview() {
     FetchtestTheme {
-        EventsListScreen(appName = stringResource(R.string.app_name))
+        EventsListScreen(appName = stringResource(R.string.app_name), placeHolder = painterResource(R.drawable.placeholder_nomoon))
     }
 }

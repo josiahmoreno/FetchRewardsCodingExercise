@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -24,7 +25,10 @@ import com.jmoreno.list.ui.models.EventItemUI
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun ItemCard(item: EventItemUI, onItemClick: (EventItemUI) -> Unit) {
+fun ItemCard(item: EventItemUI,
+             onItemClick: (EventItemUI) -> Unit,
+            placeHolder : Painter
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,13 +53,9 @@ fun ItemCard(item: EventItemUI, onItemClick: (EventItemUI) -> Unit) {
         ) {
             AsyncImage(
                 model = item.imgSrc,
-//                model = ImageRequest.Builder(context = LocalContext.current)
-//                    .data(item.imgSrc)
-//                    //.size
-//                    .scale(Scale.FILL)
-//                    .build(),
-                //error = painterResource(R.drawable.ic_broken_image),
-                //placeholder = painterResource(R.drawable.loading_img),
+                fallback = placeHolder,
+                placeholder = placeHolder,
+                error = placeHolder,
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
