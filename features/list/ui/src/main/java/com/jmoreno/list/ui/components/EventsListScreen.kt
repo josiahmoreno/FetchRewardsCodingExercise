@@ -70,9 +70,8 @@ fun EventsListScreen(
             AnimatedPane(
                 modifier = Modifier.fillMaxSize()
             ) {
-                //  this is for having a No Event Selected. in the detail pane. For some reason
-                //  No Event Selected. will show while the back navigation is animating in compact
-                //  which looks wrong
+                //  this is to fix {insert jira ticket}. For some reason "No Event Selected." will
+                //  show while the back navigation is animating in compact which looks wrong
                 //
 
                 if(state.value.isNavigatingBack){
@@ -96,7 +95,6 @@ fun EventsListScreen(
             AnimatedPane(
                 modifier = Modifier.fillMaxSize()
             ) {
-
                 val detail = state.value.detail
                 if (detail != null) {
                     EventsDetailScreen(
