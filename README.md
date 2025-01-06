@@ -36,9 +36,9 @@ Native Android App in Kotlin that retrieves and displays data from a sample api.
 - Tested with Airplane mode to handle network-less scenario
 
 # Challenging Parts
-* The adaptive layout library for Tablet was causing some navigation transition weirdness that I had to account for when in Phone/Compact mode. 
-* Making sure the Images loaded in the correct aspect ratio even in the weird screen widths like a folded phone.
-* Initially had a weird issue where the phone call feature would cause a NPE when navigating to Dialer. Fixed by making EventItemUI parcelable. 
+* The adaptive layout library for Tablet was causing some navigation transition flickering that I had to account for when in Phone/Compact mode. 
+* Making sure the Images loaded in the correct aspect ratio even with edge-case screen widths like a folded phone.
+* Initially had an issue where the phone call feature would cause a NPE when navigating to Dialer. Fixed by making EventItemUI parcelable. 
 
 # Future Improvements
 - Add a LocalDataSource to the EventsRepository for offline use.
@@ -53,9 +53,9 @@ Native Android App in Kotlin that retrieves and displays data from a sample api.
 - Worked on and off for about 3 days after New Years
 
 # Possible Discussions
- - There is probably a future discussion about the ellipses requirement for description with the 78 char limit, i think the two line is better and 78 is kinda arbitrary and would look too short.  
+ - There is probably a future discussion about the ellipses requirement for description with the 78 char limit, I think the two line is better and 78 is kinda arbitrary and would look too short.  
  
-  - I would to have a discussion about adding the spacing numbers to the mockup or if we had a styling guide I could use that instead of the ol' eyeballs.
+ - I would like to have a discussion about adding the spacing 'dp' numbers to the mockup or if we had a styling guide I could use that instead of the ol' eyeballs.
 
 # Notes throughout development
 Here are my stream of consciousness notes taken during development. Excuse their messiness!
