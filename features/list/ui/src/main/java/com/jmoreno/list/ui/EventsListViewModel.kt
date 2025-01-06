@@ -48,9 +48,17 @@ class EventsListViewModel(private val fetchEventsUseCase: FetchEventsUseCase) : 
 
     fun onEventCleared() {
         viewModelScope.launch {
-            viewState.emit(viewState.value.copy(detail = null))
+            viewState.emit(viewState.value.copy(isNavigatingBack = true))
         }
     }
+
+    fun onNavigationFinished() {
+        //viewModelScope.launch {
+        println("Josiah onNavigationFinished")
+            viewState.tryEmit(viewState.value.copy(isNavigatingBack = false, detail = null))
+        //}
+    }
+
 }
 
 private fun List<EventsDomainModel>.toUIModel(): List<EventItemUI> {

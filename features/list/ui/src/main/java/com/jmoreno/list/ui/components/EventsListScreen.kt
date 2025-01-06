@@ -8,9 +8,12 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -20,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.dp
 import com.jmoreno.list.ui.EventsListViewModel
 import com.jmoreno.list.ui.FetchListViewState
 import com.jmoreno.list.ui.models.EventItemUI
@@ -33,7 +37,19 @@ fun EventsListScreen(
     viewModel: EventsListViewModel = koinViewModel(),
     appName: String,
 ) {
-    val navigator = rememberListDetailPaneScaffoldNavigator<EventItemUI>()
+    //  Part of getting rid of space in between detail and list
+    //
+
+    val systemDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+    val customDirective = PaneScaffoldDirective(
+        maxHorizontalPartitions = systemDirective.maxHorizontalPartitions,
+        horizontalPartitionSpacerSize = 0.dp,
+        maxVerticalPartitions = systemDirective.maxVerticalPartitions,
+        verticalPartitionSpacerSize = systemDirective.verticalPartitionSpacerSize,
+        excludedBounds = systemDirective.excludedBounds,
+        defaultPanePreferredWidth = systemDirective.defaultPanePreferredWidth
+    )
+    val navigator = rememberListDetailPaneScaffoldNavigator<EventItemUI>(customDirective)
     val coroutineScope = rememberCoroutineScope()
     BackHandler(navigator.canNavigateBack()) {
         coroutineScope.launch {
@@ -54,6 +70,14 @@ fun EventsListScreen(
             AnimatedPane(
                 modifier = Modifier.fillMaxSize()
             ) {
+                //  this is for having a No Event Selected. in the detail pane. For some reason
+                //  No Event Selected. will show while the back navigation is animating in compact
+                //  which looks wrong
+                //
+
+                if(state.value.isNavigatingBack){
+                    viewModel.onNavigationFinished()
+                }
                 ListScreen(
                     state = state,
                     viewModel = viewModel,
@@ -70,8 +94,9 @@ fun EventsListScreen(
         },
         detailPane = {
             AnimatedPane(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
             ) {
+
                 val detail = state.value.detail
                 if (detail != null) {
                     EventsDetailScreen(
