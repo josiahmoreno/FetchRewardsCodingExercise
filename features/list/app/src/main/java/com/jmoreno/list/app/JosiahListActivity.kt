@@ -6,15 +6,13 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.jmoreno.list.app.ui.theme.PhunAppListTheme
 import com.jmoreno.list.ui.components.EventsListScreen
-import androidx.compose.ui.res.painterResource
 
 class JosiahListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +23,6 @@ class JosiahListActivity : ComponentActivity() {
         setContent {
             PhunAppListTheme {
                 EventsListScreen(
-                    modifier = Modifier,
                     appName = stringResource(R.string.app_name,),
                     placeHolder = painterResource(R.drawable.placeholder_nomoon)
                 )

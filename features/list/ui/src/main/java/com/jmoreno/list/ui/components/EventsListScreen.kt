@@ -29,7 +29,6 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun EventsListScreen(
-    modifier: Modifier = Modifier,
     placeHolder: Painter,
     viewModel: EventsListViewModel = koinViewModel(),
     appName: String,
