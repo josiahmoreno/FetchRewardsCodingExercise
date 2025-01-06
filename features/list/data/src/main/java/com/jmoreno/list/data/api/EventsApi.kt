@@ -18,7 +18,6 @@ class EventsApi(
                 fetchService.listRepos()
             }
             result.mapCatching {
-               // throw Exception()
                 it.body()!!
             }
         }

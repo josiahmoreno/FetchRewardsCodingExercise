@@ -1,6 +1,7 @@
 package com.jmoreno.list.ui.components
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -49,24 +50,28 @@ import com.jmoreno.list.ui.models.EventItemUI
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EventsDetailScreen(eventItemUI: EventItemUI,
-                       onBackArrowPressed: () -> Unit,
-                       placeHolder: Painter
+fun EventsDetailScreen(
+    eventItemUI: EventItemUI,
+    onBackArrowPressed: () -> Unit,
+    placeHolder: Painter
 ) {
     val scrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
     var permissionGranted by remember { mutableStateOf(false) }
+    fun sendCall() {
+        val callIntent = Intent(Intent.ACTION_CALL).apply {
+            data = Uri.parse("tel:${eventItemUI.phone}")
+        }
+        context.startActivity(callIntent)
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         permissionGranted = isGranted
         if (isGranted) {
-            val callIntent = Intent(Intent.ACTION_CALL).apply {
-                data = Uri.parse("tel:${eventItemUI.phone}")
-            }
-            context.startActivity(callIntent)
+            sendCall()
         }
     }
 
@@ -121,10 +126,7 @@ fun EventsDetailScreen(eventItemUI: EventItemUI,
                         if (eventItemUI.phone != null) {
                             IconButton(onClick = {
                                 if (permissionGranted) {
-                                    val callIntent = Intent(Intent.ACTION_CALL).apply {
-                                        data = Uri.parse("tel:${eventItemUI.phone}")
-                                    }
-                                    context.startActivity(callIntent)
+                                    sendCall()
                                 } else {
                                     permissionLauncher.launch(Manifest.permission.CALL_PHONE)
                                 }
@@ -138,30 +140,7 @@ fun EventsDetailScreen(eventItemUI: EventItemUI,
                         }
 
                         IconButton(onClick = {
-                            val smsIntent = Intent(Intent.ACTION_SENDTO).apply {
-                                data = Uri.parse("smsto:")
-                                putExtra(
-                                    "sms_body", "Check out this event! ${eventItemUI.title}\n" +
-                                            eventItemUI.dateOfEventFormatted.date
-                                )
-                            }
-                            val emailIntent = Intent(Intent.ACTION_SEND).apply {
-                                type = "message/rfc822"
-                                putExtra(
-                                    Intent.EXTRA_SUBJECT,
-                                    "Check out this event! ${eventItemUI.title}"
-                                )
-                                putExtra(
-                                    Intent.EXTRA_TEXT,
-                                    "${eventItemUI.title}\n\n${eventItemUI.dateOfEventFormatted.date}"
-                                )
-                            }
-                            val chooserIntent =
-                                Intent.createChooser(emailIntent, "Share via").apply {
-                                    putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(smsIntent))
-                                }
-                            context.startActivity(chooserIntent)
-
+                            sendShareIntent(context, eventItemUI)
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Share,
@@ -213,7 +192,31 @@ fun EventsDetailScreen(eventItemUI: EventItemUI,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-
-
     }
+}
+
+private fun sendShareIntent(context: Context, eventItemUI: EventItemUI){
+    val smsIntent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("smsto:")
+        putExtra(
+            "sms_body", "Check out this event! ${eventItemUI.title}\n" +
+                    eventItemUI.dateOfEventFormatted.date
+        )
+    }
+    val emailIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "message/rfc822"
+        putExtra(
+            Intent.EXTRA_SUBJECT,
+            "Check out this event! ${eventItemUI.title}"
+        )
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "${eventItemUI.title}\n\n${eventItemUI.dateOfEventFormatted.date}"
+        )
+    }
+    val chooserIntent =
+        Intent.createChooser(emailIntent, "Share via").apply {
+            putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(smsIntent))
+        }
+    context.startActivity(chooserIntent)
 }

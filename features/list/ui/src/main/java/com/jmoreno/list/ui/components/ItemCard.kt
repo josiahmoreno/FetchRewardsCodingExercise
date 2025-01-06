@@ -32,10 +32,7 @@ fun ItemCard(item: EventItemUI,
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            //.height(306.dp)
             .padding(
-               // top = 4.dp,
-              //  bottom = 4.dp,
                 start = 16.dp,
                 end = 16.dp
             ).clickable {
@@ -72,8 +69,9 @@ fun ItemCard(item: EventItemUI,
                 )
             ) {
                 val headline = item.title
+                // Add an ellipsis if the text exceeds 22 characters
                 val truncatedHeadline = if (headline.length > 22) {
-                    headline.take(22) + "…" // Add an ellipsis if the text exceeds 22 characters
+                    headline.take(22) + "…"
                 } else {
                     headline
                 }
@@ -83,7 +81,7 @@ fun ItemCard(item: EventItemUI,
                     modifier = Modifier.padding(top = 16.dp),
                     style = MaterialTheme.typography.headlineMedium
                 )
-                val locationLine = if(!item.locationLine2.isEmpty()){
+                val locationLine = if(item.locationLine2.isNotEmpty()){
                     item.locationLine1 +"\n"+item.locationLine2
                 } else {
                     item.locationLine1
@@ -108,10 +106,7 @@ fun ItemCard(item: EventItemUI,
                     //text = truncatedDescription,
                     text = item.description,
                     style = MaterialTheme.typography.bodyLarge,
-                  //  fontSize = 20.sp,
-                    modifier = Modifier.padding(top = 16.dp)
-                        //.background(Color.Red)
-                             ,
+                    modifier = Modifier.padding(top = 16.dp),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )

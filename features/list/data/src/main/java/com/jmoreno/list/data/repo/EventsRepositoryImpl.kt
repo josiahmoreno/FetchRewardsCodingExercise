@@ -1,12 +1,12 @@
 package com.jmoreno.list.data.repo
 
-import com.jmoreno.list.data.FetchListRepository
+import com.jmoreno.list.data.EventsRepository
 import com.jmoreno.list.data.models.EventsDto
 import com.jmoreno.list.data.models.EventsNetworkItem
 
-class FetchListRepositoryImpl(private val remoteDataSource: FetchRemoteDataSource) :
-    FetchListRepository {
-    override suspend fun fetchListItems(): Result<List<EventsDto>> {
+class EventsRepositoryImpl(private val remoteDataSource: FetchRemoteDataSource) :
+    EventsRepository {
+    override suspend fun fetchEventsItems(): Result<List<EventsDto>> {
         val result = remoteDataSource.fetchListData()
         return result.map { list ->
             list.map { it.mapToDto()}

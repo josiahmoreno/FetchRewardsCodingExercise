@@ -2,41 +2,24 @@ package com.jmoreno.list.ui.components
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.unit.dp
 import com.jmoreno.list.ui.EventsListViewModel
 import com.jmoreno.list.ui.FetchListViewState
 import com.jmoreno.list.ui.models.EventItemUI
@@ -58,18 +41,7 @@ fun EventsListScreen(
             navigator.navigateBack()
         }
     }
-    // var detailed by remember{ mutableStateOf<EventItemUI?>(null) }
     val state: State<FetchListViewState> = viewModel.viewState.collectAsState()
-    val navigationHandler: (NavigationAction) -> Unit = { action ->
-        when (action) {
-            is NavigationAction.OnFixtureClick -> {
-                coroutineScope.launch {
-                    viewModel.onEventCLicked(action.eventItemUI)
-                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, action.eventItemUI)
-                }
-            }
-        }
-    }
     val scrollState: LazyListState = rememberSaveable(saver = LazyListState.Saver) {
         LazyListState()
     }
@@ -81,9 +53,7 @@ fun EventsListScreen(
         value = navigator.scaffoldValue,
         listPane = {
             AnimatedPane(
-                modifier = Modifier.fillMaxSize(),
-                // enterTransition = slideInHorizontally (),
-                // exitTransition = slideOutHorizontally ()
+                modifier = Modifier.fillMaxSize()
             ) {
                 ListScreen(
                     state = state,
@@ -91,121 +61,44 @@ fun EventsListScreen(
                     scrollState = scrollState,
                     appName = appName,
                     placeHolder = placeHolder,
-                    onItemClick = {
-                        navigationHandler(NavigationAction.OnFixtureClick(it))
+                    onItemClick = { eventItemUI ->
+                        coroutineScope.launch {
+                            viewModel.onEventCLicked(eventItemUI)
+                            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, eventItemUI)
+                        }
                     })
             }
         },
         detailPane = {
             AnimatedPane(
                 modifier = Modifier.fillMaxSize(),
-                //          enterTransition = slideInHorizontally (),
-                //      exitTransition = slideOutHorizontally ()
             ) {
-                state.value.detail?.let {
-                    EventsDetailScreen(it,
+                val detail = state.value.detail
+                if (detail != null) {
+                    EventsDetailScreen(
+                        eventItemUI = detail,
                         onBackArrowPressed = {
                             coroutineScope.launch {
                                 navigator.navigateBack()
+                                viewModel.onEventCleared()
                             }
                         }, placeHolder = placeHolder
                     )
+                } else {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    {
+                        Text(
+                            "No Event Selected.",
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
         },
     )
-}
-
-sealed interface UserAction
-
-sealed interface NavigationAction : UserAction {
-    data class OnFixtureClick(val eventItemUI: EventItemUI) : NavigationAction
-    // other navigation actions could go here.
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ListScreen(
-    state: State<FetchListViewState>,
-    scrollState: LazyListState,
-    viewModel: EventsListViewModel,
-    appName: String,
-    placeHolder: Painter,
-    onItemClick: (EventItemUI) -> Unit
-) {
-
-    val snackBarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(state.value.isError) {
-        if (state.value.isError) {
-            val result = snackBarHostState.showSnackbar(
-                message = "Error fetching from api.",
-                actionLabel = "Retry",
-                duration = SnackbarDuration.Indefinite
-            )
-            when (result) {
-                SnackbarResult.Dismissed -> {}
-                SnackbarResult.ActionPerformed -> {
-                    viewModel.refresh()
-                }
-            }
-        }
-    }
-    Scaffold(
-        //contentWindowInsets = WindowInsets(0.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Cyan),
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackBarHostState) },
-        topBar = {
-            TopAppBar(
-                // windowInsets = WindowInsets(0.dp),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    //containerColor = Color.Transparent,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(appName)
-                }
-            )
-        }
-    ) { innerPadding ->
-        val pullRefreshState = rememberPullToRefreshState()
-        PullToRefreshBox(
-            modifier = Modifier.padding(innerPadding),
-            state = pullRefreshState,
-            isRefreshing = state.value.isLoading,
-            onRefresh = {
-                viewModel.refresh()
-            }
-        ) {
-            LazyColumn(
-                state = scrollState,
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                modifier = Modifier
-                    //.padding(innerPadding)
-
-                    // .background(Color.White)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(
-                    top = 24.dp,
-                    bottom = 24.dp,
-                )
-
-            ) {
-                items(state.value.data, key = {
-                    it.id
-                }) { item ->
-                    ItemCard(
-                        item = item,
-                        onItemClick = onItemClick,
-                        placeHolder = placeHolder
-                    )
-                }
-            }
-        }
-    }
 }
 
 

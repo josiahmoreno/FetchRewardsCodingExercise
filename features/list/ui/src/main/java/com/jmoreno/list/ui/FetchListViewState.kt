@@ -8,10 +8,3 @@ data class FetchListViewState(
     val data: List<EventItemUI> = listOf(),
     val detail: EventItemUI? = null
 )
-/*
-sealed class FetchListViewState {
-    class Error: FetchListViewState()
-    class Loading: FetchListViewState()
-    data class Successful(val data: List<EventItemUI> = listOf()):  FetchListViewState()
-}
- */

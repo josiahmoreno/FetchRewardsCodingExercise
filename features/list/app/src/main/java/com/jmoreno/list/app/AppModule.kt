@@ -2,9 +2,9 @@ package com.jmoreno.list.app
 
 import com.jmoreno.list.data.repo.FetchRemoteDataSource
 import com.jmoreno.list.data.IEventsApi
-import com.jmoreno.list.data.FetchListRepository
+import com.jmoreno.list.data.EventsRepository
 import com.jmoreno.list.data.api.*
-import com.jmoreno.list.data.repo.FetchListRepositoryImpl
+import com.jmoreno.list.data.repo.EventsRepositoryImpl
 import com.jmoreno.list.ui.UiModule
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ val AppModule = module {
     includes(UiModule)
     includes(NetworkModule)
     singleOf(::FetchRemoteDataSource) { bind<FetchRemoteDataSource>() }
-    singleOf(::FetchListRepositoryImpl) { bind<FetchListRepository>() }
+    singleOf(::EventsRepositoryImpl) { bind<EventsRepository>() }
     singleOf(::EventsApi) { bind<IEventsApi>() }
     single<CoroutineDispatcher> { Dispatchers.IO }
 }

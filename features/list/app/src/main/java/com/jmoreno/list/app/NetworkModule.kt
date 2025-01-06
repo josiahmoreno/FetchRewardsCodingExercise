@@ -15,10 +15,8 @@ fun provideHttpClient(): OkHttpClient {
         .build()
 }
 
-
 fun provideConverterFactory(): GsonConverterFactory =
     GsonConverterFactory.create()
-
 
 fun provideRetrofit(
     okHttpClient: OkHttpClient,

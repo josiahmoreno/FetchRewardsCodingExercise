@@ -12,25 +12,18 @@ import androidx.compose.ui.graphics.toArgb
 
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.graphics.alpha
-import androidx.core.view.WindowCompat
-import com.jmoreno.list.app.ui.theme.FetchtestTheme
+import com.jmoreno.list.app.ui.theme.PhunAppListTheme
 import com.jmoreno.list.ui.components.EventsListScreen
-import androidx.activity.compose.BackHandler
 import androidx.compose.ui.res.painterResource
-import com.jmoreno.list.ui.models.EventItemUI
 
 class JosiahListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
-        //WindowCompat.setDecorFitsSystemWindows(window, true)
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(
-            //android.graphics.Color.parseColor("#801b1b1b")
             Color.White.copy(alpha = .1f).toArgb()
         ))
         setContent {
-            FetchtestTheme {
+            PhunAppListTheme {
                 EventsListScreen(
                     modifier = Modifier,
                     appName = stringResource(R.string.app_name,),
@@ -45,7 +38,7 @@ class JosiahListActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun JosiahListScreenPreview() {
-    FetchtestTheme {
+    PhunAppListTheme {
         EventsListScreen(appName = stringResource(R.string.app_name), placeHolder = painterResource(R.drawable.placeholder_nomoon))
     }
 }
