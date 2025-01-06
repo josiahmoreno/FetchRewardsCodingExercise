@@ -14,10 +14,10 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = BlueLight,
     secondary = PurpleGrey40,
-    tertiary = Pink40
-
+    tertiary = Pink40,
+    primaryContainer = Blue
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -35,6 +35,7 @@ fun PhunAppListTheme(
     // Dynamic color is available on Android 12+
     content: @Composable () -> Unit
 ) {
+    // Purposeful choice to only include the Dark Theme
     val colorScheme = when {
         //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
         //            val context = LocalContext.current
