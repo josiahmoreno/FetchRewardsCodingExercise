@@ -69,7 +69,8 @@ fun ItemCard(item: EventItemUI,
                 )
             ) {
                 val headline = item.title
-                // Add an ellipsis if the text exceeds 22 characters
+                //  Add an ellipsis if the text exceeds 22 characters
+                //
                 val truncatedHeadline = if (headline.length > 22) {
                     headline.take(22) + "…"
                 } else {
@@ -91,24 +92,16 @@ fun ItemCard(item: EventItemUI,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-//                Text(
-//                    text = item.locationLine2,
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    modifier = Modifier.padding(top = 2.dp)
-//                )
-//                val description = item.description
-//                val truncatedDescription = if (description.length > 22) {
-//                    description.take(78) + "…" // Add an ellipsis if the text exceeds 78 characters
-//                } else {
-//                    description
-//                }
+                val description = item.description
+                val truncatedDescription = if (description.length > 78) {
+                    description.take(78) + "…"
+                } else {
+                    description
+                }
                 Text(
-                    //text = truncatedDescription,
-                    text = item.description,
+                    text = truncatedDescription,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(top = 16.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
                 )
             }
 
